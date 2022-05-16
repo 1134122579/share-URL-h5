@@ -13,6 +13,11 @@ export const constantRouterMap = [
     component: () => import('@/views/detail/index.vue')
   },
   {
+    path: '/share',
+    name: 'share',
+    component: () => import('@/views/sharepage/index.vue')
+  },
+  {
     path: '/imagelist',
     name: 'Imagelist',
     component: () => import('@/views/imagelist/index.vue')

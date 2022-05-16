@@ -1,25 +1,17 @@
 <template>
   <div class="homepage">
+    <Header />
     <!-- 头部 -->
-    <div class="header" id="tabTop">
-      <!-- 头像 -->
-      <div class="header-image">
-        <!-- <img
-          src="https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eobpsN46APV89W3j2eaOJU6QCdfOernzbdChtPJDPBTll8Gl1xWaRKczWUicaQxCSEGOQe1C5rvKHQ/0"
-          alt=""
-        /> -->
-        <img src="@/assets/logo.png" alt="" />
-      </div>
+    <div class="header" id="tabTop" v-if="listTopobj.cover">
+      <img :src="listTopobj.cover" alt="" />
       <!-- 个人信息 -->
       <div class="user-info">
-        <!-- <div class="user-name">陈嵩 | 盛视天橙™天空之橙</div> -->
-        <div class="user-name">盛视天橙 DESIGN</div>
-        <div class="user-desc">建筑丨空间丨景观丨设计丨运营</div>
+        <div class="user-name">{{ listTopobj.title }}</div>
       </div>
     </div>
     <!-- 内容 -->
     <div class="main">
-      <div class="main-header">
+      <!-- <div class="main-header">
         <ul class="flexbetween">
           <li @click="onDk" :style="is_dk && 'color:#3fe4c6'">
             <i class="iconfont icon-sign icon-size"></i>
@@ -38,7 +30,7 @@
             <p>分享</p>
           </li>
         </ul>
-      </div>
+      </div> -->
       <div class="main-content">
         <van-sticky>
           <div class="main-content-tab">
@@ -57,40 +49,16 @@
         </van-sticky>
         <!-- 列表 -->
         <div class="man-list">
-          <van-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-            @load="getList"
-            :immediate-check="false"
-          >
-            <div class="block-style" @click="goDetail(item)" v-for="(item, index) in list">
-              <div class="user-headerimage">
-                <i class="iconfont icon-huangguan huangguanstyle"></i>
-                <img :src="item.headimgurl" alt="" />
+          <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getList">
+            <div v-for="(item, index) in list" :key="index" class="block" @click="goDetail(item.id)">
+              <div class="left">
+                <img :src="item.cover" alt="" />
               </div>
-              <div class="block-content">
-                <div class="block-user-info">
-                  <div class="block-name">{{ item.nickname }}</div>
-                  <div class="block-time">{{ item.create_time }}</div>
-                </div>
-                <!-- 文本内容 -->
-                <div class="block-text">
-                  {{ item.title }}
-                </div>
-                <!-- 图片 -->
-                <div class="block-list">
-                  <div class="imgonesrtle" v-for="(imgItem, index) in item.imgs">
-                    <img :src="imgItem + '?imageView2/3/w/300'" />
-                  </div>
-                </div>
-                <!-- 操作 -->
-                <div class="block-button" @click.stop="stopClick">
-                  <i
-                    :class="zanlist.includes(item.id) ? 'iconfont icon-dianzan_s colorRed ' : 'iconfont icon-zan'"
-                    @click="zanClick(item.id)"
-                  ></i>
-                  <i class="iconfont icon-duihuaqipao"></i>
+              <div class="right">
+                <div class="title">{{ item.title }}</div>
+                <div class="tag">
+                  <div class="time">{{ item.create_time }}</div>
+                  <div class="time">{{ item.label }}</div>
                 </div>
               </div>
             </div>
@@ -98,6 +66,7 @@
         </div>
       </div>
     </div>
+    <div class="page-tag">天橙浏览器</div>
     <!-- 分享提示 -->
     <van-popup
       v-model="isshareShow"
@@ -120,11 +89,16 @@
 </template>
 
 <script>
-import { getPyq } from '@/api/user'
+import Header from '@/components/Header'
+
+import { getShareArticleList } from '@/api/user'
 import { formatTime } from '@/utils'
 import { setShareInfo } from '@/utils/share'
 
 export default {
+  components: {
+    Header
+  },
   data() {
     return {
       is_dk: false,
@@ -132,6 +106,7 @@ export default {
       titleactivecolor: '#333',
       linewidth: '20px',
       list: [],
+      listTopobj: null,
       iszan: false,
       isshareShow: false,
       loading: false,
@@ -141,31 +116,44 @@ export default {
         page: 1
       },
       zanlist: [],
+
       typelist: [
         {
           id: '',
           name: '全部'
         },
         {
-          id: 1,
-          name: '精华'
+          id: '空间',
+          name: '空间'
         },
         {
-          id: 2,
+          id: '建筑',
           name: '建筑'
         },
         {
-          id: 3,
+          id: '景观',
           name: '景观'
         },
         {
-          id: 4,
-          name: '空间'
+          id: '设计',
+          name: '设计'
+        },
+        {
+          id: '项目',
+          name: '项目'
+        },
+        {
+          id: '资讯',
+          name: '资讯'
+        },
+        {
+          id: '人物',
+          name: '人物'
+        },
+        {
+          id: '深度',
+          name: '深度'
         }
-        // {
-        //   id: 6,
-        //   name: ''
-        // }
       ]
     }
   },
@@ -209,7 +197,8 @@ export default {
     tabchange(name, title) {
       this.listQuery.page = 1
       this.finished = false
-      this.scrollIntoView('#tabTop')
+      console.log(name, title)
+      //   this.scrollIntoView('#tabTop')
       this.getList()
     },
     onDk() {
@@ -222,10 +211,11 @@ export default {
       this.isshareShow = true
     },
     getList() {
+      let { page, label } = this.listQuery
       this.loading = true
-      getPyq(this.listQuery).then(res => {
+      getShareArticleList({ page, label }).then(res => {
         res.data = res.data.map(item => {
-          item['create_time'] = formatTime(+new Date(item['create_time'].replaceAll('-', '/')))
+          item['create_time'] = formatTime(+new Date(item['create_time'].replaceAll('-', '/')), '{y}-{m}-{d} {h}:{i}')
           return item
         })
 
@@ -233,6 +223,9 @@ export default {
           this.list = res.data
         } else {
           this.list = this.list.concat(res.data)
+        }
+        if (this.listQuery.label === '') {
+          this.listTopobj = this.list[0]
         }
         // 加载状态结束
         this.loading = false
@@ -244,10 +237,11 @@ export default {
       })
     },
     goDetail(data) {
+      console.log(data)
       this.$router.push({
         path: '/detail',
         query: {
-          id: data.id
+          id: data
         }
       })
     }
@@ -263,52 +257,53 @@ export default {
 .homepage {
   position: relative;
   background: rgba(0, 0, 0, 0);
+  background: #fff;
   overflow: hidden;
   z-index: 1;
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 320px;
-    background: #ccc url('../../assets/bg.jpg') no-repeat;
-    background-size: 100% cover;
-    z-index: -1;
-    // animation: fadenum12 30s ;
-    animation-name: fadenum12;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-    animation-duration: 50s;
-  }
+  padding-top: 60px;
+  //   &::before {
+  //     content: '';
+  //     position: absolute;
+  //     top: 0;
+  //     width: 100%;
+  //     height: 320px;
+  //     background: #ccc url('../../assets/bg.jpg') no-repeat;
+  //     background-size: 100% cover;
+  //     z-index: -1;
+  //     // animation: fadenum12 30s ;
+  //     animation-name: fadenum12;
+  //     animation-timing-function: ease-in-out;
+  //     animation-iteration-count: infinite;
+  //     animation-duration: 50s;
+  //   }
   //   background-size: cover;
   .header {
     background: rgba(0, 0, 0, 0);
     height: 210px;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-end;
     box-sizing: border-box;
-    padding-right: 10px;
-
-    .header-image {
-      width: 68px;
-      height: 68px;
-      //   border-radius: 50%;
-      overflow: hidden;
-      margin-left: 25px;
-      flex-shrink: 0;
-      img {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover;
-      }
+    position: relative;
+    z-index: 1;
+    img {
+      z-index: -1;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
     .user-info {
-      margin-left: 15px;
       color: #fff;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 10px 18px;
+      width: 100%;
+      box-sizing: border-box;
       .user-name {
         font-size: 16px;
+        @include textoverflow(2);
       }
       .user-desc {
         font-size: 12px;
@@ -318,26 +313,6 @@ export default {
   }
 
   .main {
-    .main-header {
-      padding: 10px 0;
-      background: rgba(0, 0, 0, 0.4);
-      color: #fff;
-      border-radius: 10px 10px 0 0;
-      ul {
-        justify-content: space-around;
-        font-size: 12px;
-        li {
-          width: 40px;
-          text-align: center;
-          .icon-size {
-            font-size: 22px;
-          }
-          p {
-            text-align: center;
-          }
-        }
-      }
-    }
     .main-content {
       background: #fff;
       .main-content-tab {
@@ -351,83 +326,65 @@ export default {
         }
       }
       .man-list {
-        padding: 10px 20px;
-        .block-style {
-          padding: 14px 0;
+        .block {
+          height: 100px;
           width: 100%;
+          box-sizing: border-box;
+          border-bottom: 1px solid #f7f7f7;
           display: flex;
-          .user-headerimage {
-            width: 40px;
-            height: 40px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            position: relative;
-            margin-right: 10px;
-            img {
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-              display: block;
-              border-radius: 50%;
-            }
-            .huangguanstyle {
-              font-size: 20px;
-              flex: 1;
-              color: burlywood;
-              position: absolute;
-              top: -20px;
-              left: 0;
-              right: 0;
-              margin: 0 auto;
-              text-align: center;
-            }
-          }
-          .block-content {
-            flex: 1;
-            .block-user-info {
-              color: #555454;
-              font-size: 16px;
-            }
-            .block-time {
-              font-size: 12px;
-              color: #d2d2d2;
-            }
-            .block-text {
-              font-size: 16px;
-              margin-top: 6px;
-              color: #555454;
-              @include textoverflow(5);
-            }
-            .block-list {
-              display: flex;
-              justify-content: flex-start;
-              align-items: flex-start;
-              flex-wrap: wrap;
-              .imgonesrtle {
-                margin-top: 4px;
-                margin-right: 4px;
-                flex-shrink: 0;
-                width: 90px;
-                height: 90px;
-                img {
-                  width: 100%;
-                  height: 100%;
-                  object-fit: cover;
-                  display: block;
-                }
-              }
-            }
-            .block-button {
-              margin-top: 10px;
-              i {
-                font-size: 20px;
-                margin-right: 34px;
-              }
-            }
-          }
+          justify-content: center;
+          align-items: center;
+          padding: 10px 10px;
+        }
+        .left {
+          width: 34%;
+          height: 100%;
+        }
+
+        .left img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .right {
+          flex: 1;
+          height: 100%;
+          padding-left: 8px;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .title {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          line-height: 1.5;
+          overflow: hidden;
+          font-size: 14px;
+        }
+
+        .time {
+          color: #9b9b9b;
+          font-size: 12px;
+        }
+        .tag {
+          color: #9b9b9b;
+          font-size: 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
       }
     }
+  }
+  .page-tag {
+    font-size: 12px;
+    color: #cecece;
+    text-align: center;
+    padding: 10px 0;
   }
 }
 </style>

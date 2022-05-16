@@ -156,3 +156,11 @@ export function getShareArticleDetails(params) {
     params
   })
 }
+
+export function getShareArticleList(params) {
+  return request({
+    url: api.getShareArticleList,
+    method: 'get',
+    params
+  })
+}
