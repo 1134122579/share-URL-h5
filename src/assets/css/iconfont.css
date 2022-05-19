@@ -1,8 +1,8 @@
 @font-face {
   font-family: 'iconfont'; /* Project id 3389701 */
-  src: url('//at.alicdn.com/t/font_3389701_d97wcbowfxa.woff2?t=1652679804038') format('woff2'),
-    url('//at.alicdn.com/t/font_3389701_d97wcbowfxa.woff?t=1652679804038') format('woff'),
-    url('//at.alicdn.com/t/font_3389701_d97wcbowfxa.ttf?t=1652679804038') format('truetype');
+  src: url('//at.alicdn.com/t/font_3389701_gzawy2qfwc.woff2?t=1652775873643') format('woff2'),
+    url('//at.alicdn.com/t/font_3389701_gzawy2qfwc.woff?t=1652775873643') format('woff'),
+    url('//at.alicdn.com/t/font_3389701_gzawy2qfwc.ttf?t=1652775873643') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,30 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dianhua:before {
+  content: '\e8bc';
+}
+
+.icon-zuoji:before {
+  content: '\e683';
+}
+
+.icon-31shouyexuanzhong:before {
+  content: '\e600';
+}
+
+.icon-sousuo1:before {
+  content: '\e86e';
+}
+
+.icon-sousuo2:before {
+  content: '\eafe';
+}
+
+.icon-icon-:before {
+  content: '\e621';
 }
 
 .icon-sousuo:before {

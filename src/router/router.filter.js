@@ -9,23 +9,14 @@ export default function (router) {
     //   '8f74a71ee4da81d8c3cc590b36feca46ac7734ac7d62854daf3a196d22583c6c03775b4f71d279fc2665344b6860ae005e872b9b4c2f995ace6e2a974eec55a55726b9ee532fdb4a01e6449788adc7ce'
     // )
     console.log(location, to, from)
+    document.title = '天空之橙·有光'
     let wxConfig = {
-      title: '天空之橙·Design｜建筑·空间·景观·运营',
+      title: '天空之橙·有光',
       url: location.href,
       desc: '',
       link: window.location.origin + to.fullPath,
       //   link: window.location.origin + window.location.pathname,
       imgUrl: 'http://api.skyorange.cn/logo.jpg'
-    }
-    if (to.path == '/about') {
-      wxConfig = {
-        title: '天空之橙·Design 关于我们',
-        url: location.href,
-        desc: '',
-        // link: window.location.origin + to.fullPath,
-        link: window.location.origin + window.location.pathname,
-        imgUrl: 'http://api.skyorange.cn/logo.jpg'
-      }
     }
     getShareInfo(wxConfig, () => {
       next()

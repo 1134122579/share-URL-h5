@@ -11,7 +11,6 @@ import wx from 'weixin-js-sdk'
  */
 async function getShareInfo(wxConfig, callback) {
   //如果分享的内容会根据情况变化，那么这里可以传入分享标题及url
-
   console.log('微信分享内容配置', wxConfig)
   // wxConfig['imgUrl'] = encodeURIComponent(wxConfig['imgUrl'])
   let data = await getShare({

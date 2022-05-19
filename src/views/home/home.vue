@@ -2,7 +2,7 @@
   <div class="homepage">
     <Header />
     <!-- 头部 -->
-    <div class="header" id="tabTop" v-if="listTopobj.cover">
+    <div class="header" id="tabTop" v-if="listTopobj.cover" @click="goDetail(listTopobj.id)">
       <img :src="listTopobj.cover" alt="" />
       <!-- 个人信息 -->
       <div class="user-info">
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <div class="page-tag">天橙浏览器</div>
+    <div class="page-tag">有光·搜索·浏览器1.0</div>
     <!-- 分享提示 -->
     <van-popup
       v-model="isshareShow"
@@ -159,7 +159,7 @@ export default {
   },
   created() {
     let wxConfig = {
-      title: '天空之橙·Design｜建筑·空间·景观·运营',
+      title: '天空之橙·有光',
       url: location.href,
       desc: '',
       //   link: location.href,
@@ -260,7 +260,7 @@ export default {
   background: #fff;
   overflow: hidden;
   z-index: 1;
-  padding-top: 60px;
+  padding-top: 44px;
   //   &::before {
   //     content: '';
   //     position: absolute;
@@ -302,7 +302,7 @@ export default {
       width: 100%;
       box-sizing: border-box;
       .user-name {
-        font-size: 16px;
+        font-size: 14px;
         @include textoverflow(2);
       }
       .user-desc {
@@ -383,6 +383,7 @@ export default {
   .page-tag {
     font-size: 12px;
     color: #cecece;
+    transform: scale(0.9);
     text-align: center;
     padding: 10px 0;
   }

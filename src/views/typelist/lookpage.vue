@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="typedetail">
     <Header />
     <div class="iframestyle">
       <iframe class="iframe" v-if="detail.url" :src="detail.url" frameborder="0" @load="onMyFrameLoad"></iframe>
@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      detail: '',
+      detail: {},
       toast: '',
       getData: ''
     }
@@ -34,17 +34,17 @@ export default {
       this.$router.push('/share')
     },
     onMyFrameLoad() {
-      this.toast.clear()
+      //   this.toast.clear()
       this.share()
     },
     async share() {
       console.log(this.getData, 'getDatagetDatagetDatagetData')
       let wxConfig = {
-        title: this.getData.title,
+        title: '天空之橙·有光 | 设计 建筑 空间',
         url: location.href,
-        desc: this.getData.desc || '',
-        link: window.location.href + '&time=' + new Date().getTime(),
-        imgUrl: this.getData.cover
+        desc: '',
+        link: window.location.origin + '/shareurl',
+        imgUrl: 'http://api.skyorange.cn/logo.jpg'
       }
       setShareInfo(wxConfig)
     },
@@ -53,15 +53,18 @@ export default {
       this.$router.replace('/')
     },
     getList() {
-      let id = this.$route.query.id
-      if (!id) {
-        this.$router.replace('/')
+      let urltext = this.$route.query.urltext
+      if (!urltext) {
+        this.$router.replace('/typelist')
       }
-      this.toast = this.$toast.loading({
-        duration: 0, // 持续展示 toast
-        forbidClick: true,
-        message: '加载中'
-      })
+      //   this.toast = this.$toast.loading({
+      //     duration: 0, // 持续展示 toast
+      //     forbidClick: true,
+      //     message: '加载中'
+      //   })
+      this.$set(this.detail, 'url', urltext)
+      this.share()
+      return
       getShareArticleDetails({ article_id: id }).then(res => {
         this.detail = res.data
         this.getData = res.data
@@ -73,7 +76,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.detail {
+.typedetail {
   position: relative;
   .iframe {
     width: 100%;
@@ -81,8 +84,8 @@ export default {
   }
   .button {
     position: fixed;
-    bottom: 60px;
-    right: 23px;
+    bottom: 70px;
+    right: 16px;
     width: 50px;
     height: 50px;
     z-index: 999;
