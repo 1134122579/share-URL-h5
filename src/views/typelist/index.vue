@@ -66,10 +66,10 @@ export default {
           name: 'ArchDaily-传播世界建筑',
           url: 'https://www.archdaily.cn/cn?ad_source=jv-header'
         },
-        {
-          name: '知末案例-全球室内设计案例',
-          url: 'https://news.znztv.com/classify/0_0_1_0_0_0_0_0_0'
-        },
+        // {
+        //   name: '知末案例-全球室内设计案例',
+        //   url: 'https://news.znztv.com/classify/0_0_1_0_0_0_0_0_0'
+        // },
 
         {
           name: '搜建筑-关注全球时尚的、新的建筑资讯',
@@ -84,10 +84,10 @@ export default {
           name: '设计宇宙-推动高品质项目和机构的分享平台',
           url: ' https://www.designverse.com.cn/'
         },
-        {
-          name: 'Hi设计-创新商业空间和创新商业IP的数字媒体',
-          url: 'https://www.hisheji.com/'
-        },
+        // {
+        //   name: 'Hi设计-创新商业空间和创新商业IP的数字媒体',
+        //   url: 'https://www.hisheji.com/'
+        // },
         {
           name: '有方建筑-高品质建筑资讯门户',
           url: 'http://www.archiposition.com/'
@@ -99,11 +99,11 @@ export default {
         {
           name: '谷德设计网-服务全球创意，推进全球创造',
           url: 'https://www.gooood.cn/'
-        },
-        {
-          name: '专筑网-为设计先锋力量提供的交流平台',
-          url: 'http://www.iarch.cn/'
         }
+        // {
+        //   name: '专筑网-为设计先锋力量提供的交流平台',
+        //   url: 'http://www.iarch.cn/'
+        // }
       ],
       listQuery: {
         label: '',
@@ -199,9 +199,9 @@ export default {
       })
     },
     goDetail(data) {
-      console.log(data)
-      window.open(data.url)
-      return
+      //   console.log(data)
+      //   window.open(data.url)
+      //   return
       this.$router.push({
         path: '/typelook',
         query: {

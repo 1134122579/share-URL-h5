@@ -48,7 +48,6 @@ export default {
       }
       setShareInfo(wxConfig)
     },
-
     goHome() {
       this.$router.replace('/')
     },

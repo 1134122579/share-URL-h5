@@ -49,7 +49,7 @@ export default {
     box-sizing: border-box;
     width: 100%;
     background: #fff;
-    padding: 6px 10px;
+    padding: 9px 10px;
     color: #4a4a4a;
     z-index: 99;
     display: flex;
